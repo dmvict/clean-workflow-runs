@@ -1,0 +1,107 @@
+about:
+  name: clean-workflow-runs
+  version: 0.1.0
+  description: Flexible and configurable action for removing completed workflow runs.
+  author: Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+  contributors:
+    - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+  license: MIT
+  npm.homepage: 'https://github.com/dmvict/clean-workflow-runs'
+  npm.scripts:
+    test: tst .run test/
+  keywords:
+    - action
+    - clean
+    - delete
+    - remove
+    - purge
+    - github
+    - workflow
+    - workflow run
+  interpreters:
+    - njs >= 10.0.0
+build:
+  release:
+    criterion:
+      publish: 1
+      default: 1
+      bump:
+        - major
+        - minor
+        - patch
+    steps:
+      - sync
+      - install.submodules
+      - compile
+      - rename.compiled
+      - bump.*=1
+      - package.json.generate
+      - add.all
+      - commit
+      - tag
+      - push
+step:
+  sync:
+    inherit: git.sync
+    dirPath: .
+  install.submodules:
+    shell: npm install --production
+  compile:
+    shell: 'ncc build {path::entry} -m -o dist'
+  rename.compiled:
+    shell: mv dist/index.js dist/main.js
+  bump:
+    inherit: version.bump
+    criterion:
+      bump:
+        - major
+        - minor
+        - patch
+  add.all:
+    inherit: git
+    command: add .
+  commit:
+    inherit: git
+    command: 'commit -am "version {about::version}"'
+  tag:
+    inherit: git.tag
+    tag: 'v{about::version}'
+  push:
+    inherit: git.push
+    dirPath: .
+  release:
+    inherit: repo.release
+    tag: 'v{about::version}'
+  package.json.generate:
+    inherit: npm.generate
+    entryPath: 'path::entry'
+    packagePath: package.json
+    filesPath: '{path::proto}/**'
+    withDisabledSubmodules: 1
+path:
+  origins:
+    - 'git+https:///github.com/dmvict/clean-workflow-runs'
+  entry: src/Main.js
+  repository: 'git+https:///github.com/dmvict/clean-workflow-runs'
+  bugtracker: 'https:///github.com/dmvict/clean-workflow-runs/issues'
+  in: .
+  out: out
+  temp:
+    - 'path::out'
+    - package-lock.json
+    - package.json
+    - node_modules
+  proto: ./src
+  tests: ./test
+submodule:
+  '@actions/core':
+    path: 'npm:///@actions/core!1.6.0'
+    enabled: 0
+  '@octokit/rest':
+    path: 'npm:///@octokit/rest!18.12.0'
+    enabled: 0
+  wTesting:
+    path: 'npm:///wTesting'
+    enabled: 0
+    criterion:
+      development: 1
