@@ -1,6 +1,6 @@
 about:
   name: clean-workflow-runs
-  version: 0.1.0
+  version: 1.0.0
   description: Flexible and configurable action for removing completed workflow runs.
   author: Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
   contributors:
