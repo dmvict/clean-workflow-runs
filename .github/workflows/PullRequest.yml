@@ -1,0 +1,23 @@
+
+name: pull-request
+
+on: [ pull_request ]
+
+jobs:
+  test:
+    env :
+      PRIVATE_TOKEN : ${{ secrets.PRIVATE_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        node-version: [ 16.x ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm test
