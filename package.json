@@ -1,0 +1,42 @@
+{
+  "name": "clean-workflow-runs",
+  "version": "0.1.0",
+  "description": "Flexible and configurable action for removing completed workflow runs.",
+  "author": "Dmytro Kryvoruchko <dm.vict.kr@gmail.com>",
+  "contributors": [
+    "Dmytro Kryvoruchko <dm.vict.kr@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/dmvict/clean-workflow-runs",
+  "scripts": {
+    "test": "tst .run test/"
+  },
+  "keywords": [
+    "action",
+    "clean",
+    "delete",
+    "remove",
+    "purge",
+    "github",
+    "workflow",
+    "workflow run"
+  ],
+  "npm.engines": {
+    "node": ">= 10.0.0"
+  },
+  "engine": "node >= 10.0.0",
+  "repository": "https://github.com/dmvict/clean-workflow-runs",
+  "bugs": "https://github.com/dmvict/clean-workflow-runs/issues",
+  "main": "src/Main.js",
+  "dependencies": {
+    "@octokit/rest": "18.12.0",
+    "@actions/core": "1.6.0"
+  },
+  "devDependencies": {
+    "wTesting": ""
+  },
+  "files": [
+    "src/Lib.js",
+    "src/Main.js"
+  ]
+}
