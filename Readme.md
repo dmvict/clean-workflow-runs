@@ -85,7 +85,7 @@ The option can help to debug the workflow.
 
 ```yaml
 - name: Delete workflow runs
-  uses: dmvict/clean-action@v1.0.0
+  uses: dmvict/clean-workflow-runs@v1.0.0
   with:
     token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
     repo: user/repo
@@ -115,7 +115,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Delete workflow runs
-        uses: dmvict/clean-action@v1.0.0
+        uses: dmvict/clean-workflow-runs@v1.0.0
 ```
 
 ### Clean skipped and cancelled workflows
@@ -128,7 +128,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete workflow runs
-        uses: dmvict/clean-action@v1.0.0
+        uses: dmvict/clean-workflow-runs@v1.0.0
         with:
           token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
           run_conclusions: |
@@ -155,7 +155,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete workflow runs
-        uses: dmvict/clean-action@v1.0.0
+        uses: dmvict/clean-workflow-runs@v1.0.0
         with:
           token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
           run_conclusions: |
@@ -179,7 +179,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete workflow runs
-        uses: dmvict/clean-action@v1.0.0
+        uses: dmvict/clean-workflow-runs@v1.0.0
         with:
           token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
           repo: ${{ matrix.repository }}
