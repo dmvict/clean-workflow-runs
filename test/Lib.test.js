@@ -557,6 +557,8 @@ function workflowRunsClean( test )
   return a.ready;
 }
 
+workflowRunsClean.timeOut = 20000;
+
 // --
 // declare
 // --
