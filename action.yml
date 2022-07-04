@@ -9,11 +9,16 @@ inputs:
   token:
     description: 'A personal access token.'
     required: false
+    default: ${{ github.token }}
   repo:
-    description: 'A repository from which delete workflow runs. Default is current repository.'
+    description: 'A repository from which delete workflow runs. Default is the current repository.'
+    required: false
+    default: ${{ github.repository }}
+  workflow_id:
+    description: 'A filename of workflow or its id. By default, the action grabs all workflows.'
     required: false
   branch:
-    description: 'A branch from which delete workflow runs. Default is all branches.'
+    description: 'A branch from which delete workflow runs. By default, the action grabs all branches.'
     required: false
   run_conclusions:
     description: 'Filter for workflow runs conclusion. Accepts all available conclusions.'

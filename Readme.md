@@ -5,7 +5,7 @@ Flexible and configurable action for removing completed workflow runs.
 
 ## Why
 
-Current actions provide less features and its can be unusable in some cases.
+Alternative actions have many restrictions, and it is unusable in some cases.
 
 ## Content
 
@@ -31,9 +31,7 @@ Current actions provide less features and its can be unusable in some cases.
 
 A personal access token.
 
-Default: environment variable `GITHUB_TOKEN`. See restriction of the environment variable `GITHUB_TOKEN` [in official doc](https://docs.github.com/en/actions/security-guides/automatic-token-authentication).
-
-_Note:_ : to use the environment variable `GITHUB_TOKEN` you need to export it from secrets.
+Default: context variable `github.token`. See restriction of the variable `github.token` [in official doc](https://docs.github.com/en/actions/security-guides/automatic-token-authentication).
 
 ### `repo`
 
@@ -42,6 +40,12 @@ A repository from which delete workflow runs. Default is current repository.
 Format of field : `{owner}/{repo_name}`.
 
 Default: current repository.
+
+### `workflow_id`
+
+A filename of workflow or its id. By default, the action grabs all workflows.
+
+Default: action deletes runs of all workflows.
 
 ### `branch`
 
@@ -69,7 +73,7 @@ A minimal number of completed runs which will be saved.
 
 Default: 10 runs.
 
-_Note:_ : this filter applies to the conclusions selected by options `run_conclusions`. If you need to delete all workflow runs with defined conclusion setup the option to `0`.
+_Note:_ : this filter applies to the conclusions selected by options `run_conclusions`. If you need to delete all filtered workflow runs, setup the option to `0`.
 
 ### `dry`
 
@@ -89,7 +93,8 @@ The option can help to debug the workflow.
   with:
     token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
     repo: user/repo
-    branch: master
+    workflow_id: TheWorkflow.yml
+    branch: main
     run_conclusions: |
       failure
       timed_out
@@ -98,21 +103,18 @@ The option can help to debug the workflow.
     dry: true
 ```
 
-It reads: clean all all runs in repository `repo` of user `user`, runs should be older than 30 days, delete runs on branch `master` with status `failure` or `timed_out`. Option `save_min_runs_number` says that at least single run with statuses `failure` or `timed_out`  will be saved.
+It reads: clean all all runs of the workflow `TheWorkflow.yml` in repository `repo` of user `user`, runs should be older than 30 days, delete runs on branch `main` with status `failure` or `timed_out`. Option `save_min_runs_number` says that at least single run with statuses `failure` or `timed_out`  will be saved.
 
 Option `dry` is `true`, so action deletes no workflow runs and print list of runs which should be deleted.
 
 ### With default options
 
 All defaults: delete all runs older than 90 days, save at least 10 runs.
-The environment variable `GITHUB_TOKEN` defined globally for the workflow.
 
 ```yaml
 jobs:
   delete_runs:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Delete workflow runs
         uses: dmvict/clean-workflow-runs@v1.0.0
@@ -166,7 +168,7 @@ jobs:
 
 ### Clean several repositories
 
-If you want to use single workflow to clean several repositories. Default environment token `GITHUB_TOKEN` can have no access to another repositories. It is better to use generated personal access token.
+If you want to use single workflow to clean several repositories. Default token `github.token` can have no access to another repositories. It is better to use generated personal access token.
 
 ```yaml
 jobs:
