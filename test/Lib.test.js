@@ -14,6 +14,7 @@ function actionOptionsGet( test )
   /* cleanup environments */
   delete process.env.INPUT_TOKEN;
   delete process.env.INPUT_REPO;
+  delete process.env.INPUT_WORKFLOW_ID;
   delete process.env.INPUT_BRANCH;
   delete process.env.INPUT_DRY;
   delete process.env.INPUT_RUN_CONCLUSIONS;
@@ -37,6 +38,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -53,6 +55,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 86400000,
@@ -70,6 +73,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 3600000,
@@ -89,6 +93,7 @@ function actionOptionsGet( test )
     token : 'bar',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -106,6 +111,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'some-user',
     repo : 'repository',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -115,6 +121,24 @@ function actionOptionsGet( test )
   test.identical( got, exp );
   delete process.env.INPUT_REPO;
 
+  test.case = 'not default workflow_id';
+  core.exportVariable( `INPUT_WORKFLOW_ID`, 'Workflow.yml' );
+  var got = action.actionOptionsGet();
+  var exp =
+  {
+    token : 'abc',
+    owner : 'user',
+    repo : 'repo',
+    workflowId : 'Workflow.yml',
+    branch : '',
+    conclusions : [],
+    savePeriod : 7776000000,
+    saveMinRunsNumber : 10,
+    dry : false,
+  };
+  test.identical( got, exp );
+  delete process.env.INPUT_WORKFLOW_ID;
+
   test.case = 'not default branch';
   core.exportVariable( `INPUT_BRANCH`, 'complex/branch' );
   var got = action.actionOptionsGet();
@@ -123,6 +147,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : 'complex/branch',
     conclusions : [],
     savePeriod : 7776000000,
@@ -142,6 +167,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [ 'one' ],
     savePeriod : 7776000000,
@@ -159,6 +185,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [ 'one', 'two' ],
     savePeriod : 7776000000,
@@ -178,6 +205,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -195,6 +223,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -212,6 +241,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -231,6 +261,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -248,6 +279,7 @@ function actionOptionsGet( test )
     token : 'abc',
     owner : 'user',
     repo : 'repo',
+    workflowId : '',
     branch : '',
     conclusions : [],
     savePeriod : 7776000000,
@@ -542,7 +574,7 @@ function workflowRunsClean( test )
   {
     test.identical( runs.length, 212 );
     test.identical( op, null );
-    return null
+    return null;
   });
   a.ready.then( () => action.workflowRunsGet({ token, owner, repo }) );
   a.ready.then( ( op ) =>
