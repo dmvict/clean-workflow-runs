@@ -6,15 +6,15 @@ const action = require( './Lib.js' );
 
 async function run()
 {
-  debugger;
   const options = action.actionOptionsGet();
   const runs = await action.workflowRunsGet( options );
   const filtered = action.workflowRunsFilter( runs, options );
   return action.workflowRunsClean( filtered, options );
 }
 
-run()
-.then( ( e ) =>
+//
+
+run().then( ( e ) =>
 {
   return e;
 })
