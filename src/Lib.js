@@ -25,6 +25,9 @@ function actionOptionsGet()
   if( !owner || !repo || splits.length > 2 )
   throw Error( 'Expects repo in format {owner}/{repo_name}. Please add field `repo`.' );
 
+  const workflowId = core.getInput( 'workflow_id' );
+  if( workflowId && /^\d+$/.test( workflowId ) )
+  workflowId = Number( workflowId );
   const branch = core.getInput( 'branch' );
   const conclusions = core.getMultilineInput( 'run_conclusions' );
   const savePeriod = timeParse( core.getInput( 'save_period' ) || 90 );
@@ -42,6 +45,7 @@ function actionOptionsGet()
     token,
     owner,
     repo,
+    workflowId,
     branch,
     conclusions,
     savePeriod,
