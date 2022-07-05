@@ -62,6 +62,8 @@ function run( test )
     return null;
   });
 
+  /* */
+
   a.ready.then( () =>
   {
     test.case = 'too big save period, 10 years, nothing to delete';
@@ -226,12 +228,39 @@ function run( test )
     return null;
   });
 
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'save period - 0, save min runs - 0, branch - master, workflow_id - workflow, conclusions - success, delete all';
+    core.exportVariable( `INPUT_TOKEN`, token );
+    core.exportVariable( `INPUT_REPO`, repo );
+    core.exportVariable( `INPUT_DRY`, true );
+    core.exportVariable( `INPUT_WORKFLOW_ID`, 'Conditional.yml' );
+    core.exportVariable( `INPUT_BRANCH`, 'master' );
+    core.exportVariable( `INPUT_SAVE_PERIOD`, 0 );
+    core.exportVariable( `INPUT_SAVE_MIN_RUNS_NUMBER`, 0 );
+    core.exportVariable( `INPUT_RUN_CONCLUSIONS`, 'success' );
+    return null;
+  });
+
+  a.shellNonThrowing({ currentPath : actionPath, execPath });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`TimedOut\`\"/ ), 0 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 0 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 25 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 25 );
+    return null;
+  });
+
   /* - */
 
   return a.ready;
 }
 
-run.timeOut = 120000;
+run.timeOut = 180000;
 
 // --
 // declare
