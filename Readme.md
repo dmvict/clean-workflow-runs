@@ -12,6 +12,7 @@ Alternative actions have many restrictions, and it is unusable in some cases.
 * [Inputs](#inputs)
   - [token](#token)
   - [repo](#repo)
+  - [workflow_id](#workflow_id)
   - [branch](#branch)
   - [run_conclusions](#run_conclusions)
   - [save_period](#save_period)
