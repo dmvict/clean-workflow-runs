@@ -461,7 +461,7 @@ function workflowRunsGet( test )
   a.ready.then( () => action.workflowRunsGet({ token, owner, repo, branch : 'less_than_100' }) );
   a.ready.then( ( op ) =>
   {
-    test.case = 'public repository, default branch';
+    test.case = 'public repository, not default branch, runs only one workflow';
     test.identical( op.length, 50 );
     for( let i = 0 ; i < 50 ; i++ )
     test.identical( op[ i ].name, 'Conditional' );
@@ -473,8 +473,56 @@ function workflowRunsGet( test )
   a.ready.then( () => action.workflowRunsGet({ token, owner, repo, branch : 'zero_runs' }) );
   a.ready.then( ( op ) =>
   {
-    test.case = 'public repository, default branch';
+    test.case = 'public repository, not default branch, no runs';
     test.identical( op.length, 0 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () => action.workflowRunsGet({ token, owner, repo, workflowId : 'Conditional.yml' }) );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'public repository, empty branch, with workflow_id - string';
+    test.identical( op.length, 150 );
+    for( let i = 0 ; i < 150 ; i++ )
+    test.identical( op[ i ].name, 'Conditional' );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () => action.workflowRunsGet({ token, owner, repo, workflowId : 16930641 }) );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'public repository, empty branch, with workflow_id - number';
+    test.identical( op.length, 150 );
+    for( let i = 0 ; i < 150 ; i++ )
+    test.identical( op[ i ].name, 'Conditional' );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () => action.workflowRunsGet({ token, owner, repo, branch : 'less_than_100', workflowId : 'Conditional.yml' }) );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'public repository, defined branch, with workflow_id - string';
+    test.identical( op.length, 50 );
+    for( let i = 0 ; i < 50 ; i++ )
+    test.identical( op[ i ].name, 'Conditional' );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () => action.workflowRunsGet({ token, owner, repo, branch : 'less_than_100', workflowId : 16930641 }) );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'public repository, defined branch, with workflow_id - number';
+    test.identical( op.length, 50 );
+    for( let i = 0 ; i < 50 ; i++ )
+    test.identical( op[ i ].name, 'Conditional' );
     return null;
   });
 
@@ -483,7 +531,7 @@ function workflowRunsGet( test )
   return a.ready;
 }
 
-workflowRunsGet.timeOut = 60000;
+workflowRunsGet.timeOut = 120000;
 
 //
 

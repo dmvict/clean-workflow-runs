@@ -88,6 +88,9 @@ async function workflowRunsGet( options )
 {
   octokit = new Octokit({ auth: options.token });
 
+  let result = [];
+  let runs = null;
+
   let listWorkflowRunsRoutine = octokit.actions.listWorkflowRunsForRepo;
   const opts =
   {
@@ -95,7 +98,7 @@ async function workflowRunsGet( options )
     repo : options.repo,
     branch : options.branch,
     per_page: 100,
-    page,
+    page : 1,
   };
   if( options.workflowId )
   {
@@ -103,15 +106,12 @@ async function workflowRunsGet( options )
     listWorkflowRunsRoutine = octokit.actions.listWorkflowRuns;
   }
 
-  let result = [];
-  let runs = null;
-  let page = 1;
   do
   {
     const response = await listWorkflowRunsRoutine( opts );
     runs = response.data.workflow_runs;
     result.push( ... runs );
-    page++;
+    opts.page++;
   }
   while( runs.length === 100 )
 
