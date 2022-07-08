@@ -232,6 +232,32 @@ function run( test )
 
   a.ready.then( () =>
   {
+    test.case = 'save period - 0, save min runs - 0, branch - master, conclusions - singleline string with commas, delete all';
+    core.exportVariable( `INPUT_TOKEN`, token );
+    core.exportVariable( `INPUT_REPO`, repo );
+    core.exportVariable( `INPUT_DRY`, true );
+    core.exportVariable( `INPUT_BRANCH`, 'master' );
+    core.exportVariable( `INPUT_SAVE_PERIOD`, 0 );
+    core.exportVariable( `INPUT_SAVE_MIN_RUNS_NUMBER`, 0 );
+    core.exportVariable( `INPUT_RUN_CONCLUSIONS`, 'skipped,cancelled,' );
+    return null;
+  });
+
+  a.shellNonThrowing({ currentPath : actionPath, execPath });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`TimedOut\`\"/ ), 0 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 10 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 25 );
+    test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
     test.case = 'save period - 0, save min runs - 0, branch - master, workflow_id - workflow, conclusions - success, delete all';
     core.exportVariable( `INPUT_TOKEN`, token );
     core.exportVariable( `INPUT_REPO`, repo );
