@@ -19,6 +19,7 @@ function run( test )
   const actionPath = a.abs( __dirname, '..' );
   const execPath = `node ${ a.path.nativize( a.abs( actionPath, 'src/Main.js' ) ) }`;
   const repo = 'dmvict/clean-workflow-runs-test';
+  const shellNewLineSymbol = process.platform === 'win32' ? '\r\n' : '\n';
 
   /* - */
 
@@ -36,7 +37,14 @@ function run( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( op.output, '' );
+    const output =
+    `\n================================${ shellNewLineSymbol }`
+    + `Selected 0 run(s).${ shellNewLineSymbol }`
+    + `================================${ shellNewLineSymbol }`
+    + `\n================================${ shellNewLineSymbol }`
+    + `Deleted 0 run(s) due to dry run.${ shellNewLineSymbol }`
+    + `================================${ shellNewLineSymbol }`;
+    test.identical( op.output, output );
     return null;
   });
 
@@ -59,6 +67,9 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 2 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 100 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 100 );
+    test.identical( _.strCount( op.output, 'Selected 202 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
+
     return null;
   });
 
@@ -78,7 +89,14 @@ function run( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( op.output, '' );
+    const output =
+    `\n================================${ shellNewLineSymbol }`
+    + `Selected 0 run(s).${ shellNewLineSymbol }`
+    + `================================${ shellNewLineSymbol }`
+    + `\n================================${ shellNewLineSymbol }`
+    + `Deleted 0 run(s) due to dry run.${ shellNewLineSymbol }`
+    + `================================${ shellNewLineSymbol }`;
+    test.identical( op.output, output );
     return null;
   });
 
@@ -101,6 +119,8 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 2 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 100 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 100 );
+    test.identical( _.strCount( op.output, 'Selected 202 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
     return null;
   });
 
@@ -125,6 +145,8 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 10 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 100 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 100 );
+    test.identical( _.strCount( op.output, 'Selected 212 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
     return null;
   });
 
@@ -150,6 +172,8 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 10 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 100 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 50 );
+    test.identical( _.strCount( op.output, 'Selected 162 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
     return null;
   });
 
@@ -172,7 +196,14 @@ function run( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( op.output, '' );
+    const output =
+    `\n================================${ shellNewLineSymbol }`
+    + `Selected 0 run(s).${ shellNewLineSymbol }`
+    + `================================${ shellNewLineSymbol }`
+    + `\n================================${ shellNewLineSymbol }`
+    + `Deleted 0 run(s) due to dry run.${ shellNewLineSymbol }`
+    + `================================${ shellNewLineSymbol }`;
+    test.identical( op.output, output );
     return null;
   });
 
@@ -199,6 +230,8 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 0 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 25 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 0 );
+    test.identical( _.strCount( op.output, 'Selected 25 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
     return null;
   });
 
@@ -225,6 +258,8 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 10 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 25 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 0 );
+    test.identical( _.strCount( op.output, 'Selected 35 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
     return null;
   });
 
@@ -251,6 +286,8 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 10 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 25 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 0 );
+    test.identical( _.strCount( op.output, 'Selected 35 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
     return null;
   });
 
@@ -278,6 +315,8 @@ function run( test )
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Cancel\`\"/ ), 0 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Add workflow \`Skip\`\"/ ), 25 );
     test.identical( _.strCount( op.output, /Deleting workflow run::#\d+ commit message::\"Init\"/ ), 25 );
+    test.identical( _.strCount( op.output, 'Selected 50 run(s):' ), 1 );
+    test.identical( _.strCount( op.output, 'Deleted 0 run(s) due to dry run.' ), 1 );
     return null;
   });
 
