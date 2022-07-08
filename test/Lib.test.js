@@ -103,6 +103,8 @@ function actionOptionsGet( test )
   test.identical( got, exp );
   delete process.env.INPUT_TOKEN;
 
+  /* */
+
   test.case = 'not default repo';
   core.exportVariable( `INPUT_REPO`, 'some-user/repository' );
   var got = action.actionOptionsGet();
@@ -121,7 +123,9 @@ function actionOptionsGet( test )
   test.identical( got, exp );
   delete process.env.INPUT_REPO;
 
-  test.case = 'not default workflow_id';
+  /* */
+
+  test.case = 'not default workflow_id, string';
   core.exportVariable( `INPUT_WORKFLOW_ID`, 'Workflow.yml' );
   var got = action.actionOptionsGet();
   var exp =
@@ -138,6 +142,26 @@ function actionOptionsGet( test )
   };
   test.identical( got, exp );
   delete process.env.INPUT_WORKFLOW_ID;
+
+  test.case = 'not default workflow_id, number';
+  core.exportVariable( `INPUT_WORKFLOW_ID`, '123456' );
+  var got = action.actionOptionsGet();
+  var exp =
+  {
+    token : 'abc',
+    owner : 'user',
+    repo : 'repo',
+    workflowId : 123456,
+    branch : '',
+    conclusions : [],
+    savePeriod : 7776000000,
+    saveMinRunsNumber : 10,
+    dry : false,
+  };
+  test.identical( got, exp );
+  delete process.env.INPUT_WORKFLOW_ID;
+
+  /* */
 
   test.case = 'not default branch';
   core.exportVariable( `INPUT_BRANCH`, 'complex/branch' );
@@ -177,8 +201,62 @@ function actionOptionsGet( test )
   test.identical( got, exp );
   delete process.env.INPUT_RUN_CONCLUSIONS;
 
-  test.case = 'not default conclusions, several item';
+  test.case = 'not default conclusions, single item with comma at the end';
+  core.exportVariable( `INPUT_RUN_CONCLUSIONS`, 'one,' );
+  var got = action.actionOptionsGet();
+  var exp =
+  {
+    token : 'abc',
+    owner : 'user',
+    repo : 'repo',
+    workflowId : '',
+    branch : '',
+    conclusions : [ 'one' ],
+    savePeriod : 7776000000,
+    saveMinRunsNumber : 10,
+    dry : false,
+  };
+  test.identical( got, exp );
+  delete process.env.INPUT_RUN_CONCLUSIONS;
+
+  test.case = 'not default conclusions, several item, new line symbol';
   core.exportVariable( `INPUT_RUN_CONCLUSIONS`, 'one\ntwo' );
+  var got = action.actionOptionsGet();
+  var exp =
+  {
+    token : 'abc',
+    owner : 'user',
+    repo : 'repo',
+    workflowId : '',
+    branch : '',
+    conclusions : [ 'one', 'two' ],
+    savePeriod : 7776000000,
+    saveMinRunsNumber : 10,
+    dry : false,
+  };
+  test.identical( got, exp );
+  delete process.env.INPUT_RUN_CONCLUSIONS;
+
+  test.case = 'not default conclusions, several item, comma symbol';
+  core.exportVariable( `INPUT_RUN_CONCLUSIONS`, 'one,two' );
+  var got = action.actionOptionsGet();
+  var exp =
+  {
+    token : 'abc',
+    owner : 'user',
+    repo : 'repo',
+    workflowId : '',
+    branch : '',
+    conclusions : [ 'one', 'two' ],
+    savePeriod : 7776000000,
+    saveMinRunsNumber : 10,
+    dry : false,
+  };
+  test.identical( got, exp );
+  delete process.env.INPUT_RUN_CONCLUSIONS;
+
+  test.case = 'not default conclusions, several item, comma symbol at the mid and at the end';
+  core.exportVariable( `INPUT_RUN_CONCLUSIONS`, 'one,two,' );
   var got = action.actionOptionsGet();
   var exp =
   {
