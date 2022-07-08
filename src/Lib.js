@@ -1,4 +1,6 @@
 
+'use strict';
+
 const core = require( '@actions/core' );
 const { Octokit } = require( '@octokit/rest' );
 let octokit = null;
@@ -25,11 +27,16 @@ function actionOptionsGet()
   if( !owner || !repo || splits.length > 2 )
   throw Error( 'Expects repo in format {owner}/{repo_name}. Please add field `repo`.' );
 
-  const workflowId = core.getInput( 'workflow_id' );
+  let workflowId = core.getInput( 'workflow_id' );
   if( workflowId && /^\d+$/.test( workflowId ) )
   workflowId = Number( workflowId );
   const branch = core.getInput( 'branch' );
-  const conclusions = core.getMultilineInput( 'run_conclusions' );
+  let conclusions = core.getMultilineInput( 'run_conclusions' );
+  if( conclusions.length === 1 )
+  conclusions = conclusions[ 0 ].split( ',' )
+  .map( ( v ) => v.trim() )
+  .filter( ( v ) => v !== '' );
+
   const savePeriod = timeParse( core.getInput( 'save_period' ) || 90 );
   let saveMinRunsNumber = core.getInput( 'save_min_runs_number' );
   if( saveMinRunsNumber )

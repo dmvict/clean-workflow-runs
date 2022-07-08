@@ -32,47 +32,73 @@ Alternative actions have many restrictions, and it is unusable in some cases.
 
 A personal access token.
 
-Default: context variable `github.token`. See restriction of the variable `github.token` [in official doc](https://docs.github.com/en/actions/security-guides/automatic-token-authentication).
+**Default**: context variable `github.token`. See restriction of the variable `github.token` [on official page.](https://docs.github.com/en/actions/security-guides/automatic-token-authentication).
 
 ### `repo`
 
 A repository from which delete workflow runs. Default is current repository.
 
-Format of field : `{owner}/{repo_name}`.
+Format of field: `{owner}/{repo_name}`.
 
-Default: current repository.
+**Default**: current repository.
 
 ### `workflow_id`
 
 A filename of workflow or its id. By default, the action grabs all workflows.
 
-Default: action deletes runs of all workflows.
+**Default**: action deletes runs of all workflows.
 
 ### `branch`
 
 A branch from which delete workflow runs. Default is all branches.
 
-Default: action deletes runs from all branches.
+**Default**: action deletes runs from all branches.
 
 ### `run_conclusions`
 
-Filter for workflow runs conclusion. Accepts all [available conclusions](https://docs.github.com/en/rest/reference/checks#check-runs).
+Filter for workflow runs conclusion. Accepts all [available conclusions.](https://docs.github.com/en/rest/reference/checks#check-runs).
 
-_Note:_ : if filter is not defined, then action filters runs by time. If filter has invalid conclusions its will be ignored. If filter contains only invalid conclusions, then no workflow runs will be deleted.
+Format of field:
+
+- a multiline string:
+```yaml
+run_conclusions: |
+  conclusion1
+  conclusion2
+```
+- a comma separated string:
+```yaml
+run_conclusions: conclusion1,conclusion2
+```
+
+_Attention_. Do not mix the formats of conclusions.
+
+**Default**: action grabs all run conclusions.
+
+_Note._ If filter has invalid conclusions, it will be ignored. If filter contains only invalid conclusions, then no workflow runs will be deleted.
 
 ### `save_period`
 
 Determines period during which the workflow runs will be saved.
 
-The input should be a number that define number of days or string in format `hh:mm:ss`.
+Format of field:
 
-Default: 90 days.
+- a number of days:
+```yaml
+save_period: 10
+```
+- a string in format `hh:mm:ss` :
+```yaml
+save_period: '36:00:00'
+```
+
+**Default**: 90 days.
 
 ### `save_min_runs_number`
 
 A minimal number of completed runs which will be saved.
 
-Default: 10 runs.
+**Default**: 10 runs.
 
 _Note:_ : this filter applies to the conclusions selected by options `run_conclusions`. If you need to delete all filtered workflow runs, setup the option to `0`.
 
@@ -80,7 +106,7 @@ _Note:_ : this filter applies to the conclusions selected by options `run_conclu
 
 Enables dry run of action. Action will print the list of workflow runs to delete.
 
-Default: false.
+**Default**: false.
 
 The option can help to debug the workflow.
 

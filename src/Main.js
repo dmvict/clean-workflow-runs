@@ -1,4 +1,6 @@
 
+'use strict';
+
 const core = require( '@actions/core' );
 const action = require( './Lib.js' );
 
