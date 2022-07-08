@@ -160,24 +160,74 @@ async function workflowRunsClean( runs, options )
   if( octokit === null )
   octokit = new Octokit({ auth: options.token });
 
-  if( options.dry )
+  const reportMap = Object.create( null );
+  reportMap.conclusions = Object.create( null );
   for( let i = 0 ; i < runs.length ; i++ )
+  reportMap.conclusions[ runs[ i ].conclusion ] = 0;
+  reportMap.runsLength = runs.length;
+
+  if( options.dry )
   {
-    const run_id = runs[ i ].id;
-    core.info( `Deleting workflow run::#${ run_id } commit message::"${ runs[ i ].head_commit.message }"` );
+    for( let i = 0 ; i < runs.length ; i++ )
+    {
+      const runId = runs[ i ].id;
+      const msg = runs[ i ].head_commit.message;
+      const conclusion = runs[ i ].conclusion;
+      reportMap.conclusions[ conclusion ] += 1;
+
+      core.info( `Deleting workflow run::#${ runId } commit message::"${ msg }" conclusion::${ conclusion }` );
+    }
+    reportMap.msg = `Deleted 0 run(s) due to dry run.`;
   }
   else
-  for( let i = 0 ; i < runs.length ; i++ )
   {
-    const run_id = runs[ i ].id;
-    core.info( `Deleting workflow run::#${ run_id } commit message::"${ runs[ i ].head_commit.message }"` );
-    await octokit.actions.deleteWorkflowRun
-    ({
-      owner : options.owner,
-      repo : options.repo,
-      run_id,
-    });
+    for( let i = 0 ; i < runs.length ; i++ )
+    {
+      const runId = runs[ i ].id;
+      const msg = runs[ i ].head_commit.message;
+      const conclusion = runs[ i ].conclusion;
+      reportMap.conclusions[ conclusion ] += 1;
+
+      core.info( `Deleting workflow run::#${ runId } commit message::"${ msg }" conclusion::${ conclusion }` );
+      try
+      {
+        await octokit.actions.deleteWorkflowRun
+        ({
+          owner : options.owner,
+          repo : options.repo,
+          run_id : runId,
+        });
+      }
+      catch( err )
+      {
+        reportMap.msg = `Deleted ${ i - 1 } run(s).`
+        reportLog( reportMap );
+        throw err;
+      }
+    }
+    reportMap.msg = `Deleted ${ runs.length } run(s).`
   }
+
+  reportLog( reportMap );
+}
+
+//
+
+function reportLog( reportMap )
+{
+  const delimeter = '='.repeat( reportMap.msg.length );
+  const conclusionsKeys = Object.keys( reportMap.conclusions );
+
+  core.info( `\n${ delimeter }` );
+  core.info( `Selected ${ reportMap.runsLength } run(s)${ conclusionsKeys.length > 0 ? ':' : '.' }` );
+  if( conclusionsKeys.length > 0 )
+  for( let key in reportMap.conclusions )
+  core.info( `${ key }::${ reportMap.conclusions[ key ] }` );
+  core.info( delimeter );
+
+  core.info( `\n${ delimeter }` );
+  core.info( reportMap.msg );
+  core.info( delimeter );
 }
 
 //
