@@ -1,6 +1,6 @@
 {
   "name": "clean-workflow-runs",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Flexible and configurable action for removing completed workflow runs.",
   "author": "Dmytro Kryvoruchko <dm.vict.kr@gmail.com>",
   "contributors": [
